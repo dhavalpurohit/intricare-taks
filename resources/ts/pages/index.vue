@@ -192,7 +192,10 @@ const workflowModes = [
           <VBtn
             class="modal-btn-next text-none"
             variant="flat"
-            @click="isDialogVisible = false"
+            @click="() => {
+              isDialogVisible = false
+              $router.push('/campaign/create')
+            }"
           >
             Next
           </VBtn>
@@ -230,7 +233,7 @@ const workflowModes = [
 
 .close-icon-wrapper {
   border: 1.5px solid #64748b;
-  border-radius: 4px;
+  border-radius: 20px;
   block-size: 20px;
   inline-size: 20px;
 }

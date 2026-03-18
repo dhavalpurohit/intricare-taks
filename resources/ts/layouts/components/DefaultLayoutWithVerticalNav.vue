@@ -12,11 +12,28 @@ import { VerticalNavLayout } from '@layouts'
 import { useConfigStore } from '@core/stores/config'
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
+import { computed, inject, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const configStore = useConfigStore()
 const layoutConfigStore = useLayoutConfigStore()
 const isVerticalNavHovered = inject(injectionKeyIsVerticalNavHovered) || ref(false)
 const isMini = layoutConfigStore.isVerticalNavMini(isVerticalNavHovered)
+
+const route = useRoute()
+const breadcrumbs = computed(() => {
+  if (route.path.includes('/campaign/create')) {
+    return [
+      { title: '', to: '/' },
+      { title: 'Campaign', to: '/campaign' },
+      { title: 'Advance Campaign', disabled: true }
+    ]
+  }
+  return [
+    { title: '', to: '/' },
+    { title: 'Campaign', disabled: true }
+  ]
+})
 </script>
 
 <template>
@@ -36,7 +53,7 @@ const isMini = layoutConfigStore.isVerticalNavMini(isVerticalNavHovered)
         </IconBtn>
 
         <!-- Breadcrumbs -->
-        <VBreadcrumbs :items="['', 'Campaign']" class="px-0">
+        <VBreadcrumbs :items="breadcrumbs" class="px-0">
           <template #prepend>
             <VIcon icon="tabler-smart-home" size="18" color="primary" />
           </template>
