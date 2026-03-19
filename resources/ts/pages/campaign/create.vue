@@ -1,17 +1,18 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import CsvUpload from '@/components/campaign/CsvUpload.vue'
 import ImportMethodCard from '@/components/campaign/ImportMethodCard.vue'
 import LinkedInSearch from '@/components/campaign/LinkedInSearch.vue'
-import LookalikeAudience from '@/components/campaign/LookalikeAudience.vue'
+import LookalikeModal from '@/components/campaign/LookalikeModal.vue'
 import MappingTable from '@/components/campaign/MappingTable.vue'
-import WebhookInfo from '@/components/campaign/WebhookInfo.vue'
-import { useCampaignWizard, type ImportMethod } from '@/composables/useCampaignWizard'
+
+// import WebhookInfo from '@/components/campaign/WebhookInfo.vue'
+import { type ImportMethod, useCampaignWizard } from '@/composables/useCampaignWizard'
 import calendarIcon from '@images/icons/calendar.svg?url'
 import checkListIcon from '@images/icons/check-list.svg?url'
 import linkedinIcon from '@images/icons/linkedin.svg?url'
 import profileIcon from '@images/icons/profile-icon.svg?url'
 import userListIcon from '@images/icons/user-list.svg?url'
-import { computed } from 'vue'
 
 const {
   currentStep,
@@ -41,7 +42,7 @@ const importMethods = [
   },
   {
     value: 'lookalike',
-    title: 'Lead Lists',
+    title: 'Lookalike Audience',
     description: 'Use Lead Finder to find audience.',
     icon: userListIcon,
   },
@@ -54,18 +55,27 @@ const importMethods = [
 ]
 
 const isStep1Valid = computed(() => {
-  if (!selectedImportMethod.value) return false
-  
-  if (selectedImportMethod.value === 'linkedin') return !!linkedinUrl.value
-  if (selectedImportMethod.value === 'csv') return !!csvFile.value
-  if (selectedImportMethod.value === 'lookalike') return lookalikeList.value.length > 0
-  if (selectedImportMethod.value === 'webhook') return true
-  
+  if (!selectedImportMethod.value)
+    return false
+
+  if (selectedImportMethod.value === 'linkedin')
+    return !!linkedinUrl.value
+  if (selectedImportMethod.value === 'csv')
+    return !!csvFile.value
+  if (selectedImportMethod.value === 'lookalike')
+    return lookalikeList.value.length > 0
+  if (selectedImportMethod.value === 'webhook')
+    return true
+
   return false
 })
 
+const showLookalikeModal = ref(false)
+
 const handleImportMethodSelect = (method: string) => {
   selectedImportMethod.value = method as ImportMethod
+  if (method === 'lookalike')
+    showLookalikeModal.value = true
 }
 
 const breadcrumbs = [
@@ -75,22 +85,51 @@ const breadcrumbs = [
 </script>
 
 <template>
-  <VContainer fluid class="pa-6">
-
-
+  <VContainer
+    fluid
+    class="pa-6"
+  >
     <VRow justify="center">
-      <VCol cols="12">
-        <VCard variant="flat" class="border rounded-lg mb-6">
-          <div class="d-flex align-center pa-4">
-            <!-- Stepper Indicators -->
-            <div class="d-flex align-center me-8">
+      <VCol
+        cols="12"
+        class="d-flex flex-column"
+        style="min-block-size: calc(100vh - 160px);"
+      >
+        <VCard
+          variant="flat"
+          class="border rounded-lg mb-6"
+        >
+          <!-- Stepper Indicators -->
+          <div class="d-flex align-center flex-wrap flex-sm-nowrap me-8">
+            <div class="d-flex align-center mb-2 mb-sm-0">
               <div class="stepper-icon active rounded me-3">
-                <img :src="checkListIcon" alt="Checklist" width="20" height="20" />
+                <img
+                  :src="checkListIcon"
+                  alt="Checklist"
+                  width="20"
+                  height="20"
+                >
               </div>
               <span class="stepper-text active-text">Define Target Audience</span>
-              <VIcon icon="tabler-chevron-right" size="20" class="mx-4 text-disabled" />
+            </div>
+            <VIcon
+              icon="tabler-chevron-right"
+              size="20"
+              class="mx-2 mx-sm-4 text-disabled d-none d-sm-block"
+            />
+            <VIcon
+              icon="tabler-chevron-down"
+              size="20"
+              class="mx-auto text-disabled d-block d-sm-none w-100"
+            />
+            <div class="d-flex align-center mt-2 mt-sm-0">
               <div class="stepper-icon inactive rounded me-3">
-                <img :src="profileIcon" alt="Profile" width="20" height="20" />
+                <img
+                  :src="profileIcon"
+                  alt="Profile"
+                  width="20"
+                  height="20"
+                >
               </div>
               <span class="stepper-text inactive-text">Sender Profiles</span>
             </div>
@@ -100,20 +139,45 @@ const breadcrumbs = [
         <!-- Main Content Area with Vertical Progress -->
         <div class="wizard-content-container position-relative ps-8">
           <!-- Vertical Line -->
-          <div class="vertical-connector position-absolute"></div>
+          <div class="vertical-connector position-absolute" />
 
           <!-- Section 1: Import Method -->
           <div class="wizard-section position-relative mb-8">
-            <div class="status-dot position-absolute" :class="{ 'completed': !!selectedImportMethod, 'active': !selectedImportMethod }">
-              <VIcon v-if="selectedImportMethod" icon="tabler-check" color="white" size="10" />
+            <div
+              class="status-dot position-absolute"
+              :class="{ completed: !!selectedImportMethod, active: !selectedImportMethod }"
+            >
+              <VIcon
+                v-if="selectedImportMethod"
+                icon="tabler-check"
+                color="white"
+                size="10"
+              />
             </div>
-            
+
             <div class="choose-import-method-box d-flex align-center justify-space-between mb-6 pa-4">
-              <span class="choose-import-title">Choose Import Method</span>
-              <VIcon icon="tabler-chevron-up" color="text-disabled" />
+              <div class="d-flex align-center">
+                <span class="choose-import-title text-truncate me-2">Choose Import Method</span>
+                <VChip
+                  size="x-small"
+                  variant="flat"
+                  color="#F1F1F2"
+                  class="text-caption font-weight-medium"
+                  style="block-size: 20px; color: #444050 !important;"
+                >
+                  Step 1 of 2
+                </VChip>
+              </div>
+              <VIcon
+                icon="tabler-chevron-up"
+                color="text-disabled"
+              />
             </div>
-            
-            <div class="d-flex flex-wrap" style="gap: 16px;">
+
+            <div
+              class="d-flex flex-wrap"
+              style="gap: 16px;"
+            >
               <ImportMethodCard
                 v-for="method in importMethods"
                 :key="method.value"
@@ -125,61 +189,103 @@ const breadcrumbs = [
           </div>
 
           <!-- Section 2: Method Specific UI -->
-          <div v-if="selectedImportMethod" class="wizard-section position-relative mb-8">
-            <div class="status-dot position-absolute" :class="{ 'completed': isStep1Valid, 'active': !isStep1Valid }">
-              <VIcon v-if="isStep1Valid" icon="tabler-check" color="white" size="10" />
+          <div
+            v-if="selectedImportMethod"
+            class="wizard-section position-relative mb-8"
+          >
+            <div
+              class="status-dot position-absolute"
+              :class="{ completed: isStep1Valid, active: !isStep1Valid }"
+            >
+              <VIcon
+                v-if="isStep1Valid"
+                icon="tabler-check"
+                color="white"
+                size="10"
+              />
             </div>
 
             <!-- Import Component or Mapping Table -->
             <div class="mb-8">
               <div v-if="selectedImportMethod === 'linkedin'">
                 <div class="choose-import-method-box d-flex align-center justify-space-between mb-6 pa-4">
-                  <span class="choose-import-title">Paste LinkedIn Search URL</span>
-                  <VIcon icon="tabler-chevron-up" color="text-disabled" />
+                  <span class="choose-import-title text-truncate">Paste LinkedIn Search URL</span>
+                  <VIcon
+                    icon="tabler-chevron-up"
+                    color="text-disabled"
+                  />
                 </div>
                 <LinkedInSearch v-model="linkedinUrl" />
               </div>
-              
+
               <div v-if="selectedImportMethod === 'csv'">
                 <div class="choose-import-method-box d-flex align-center justify-space-between mb-6 pa-4">
-                  <span class="choose-import-title">Upload CSV File</span>
-                  <VIcon icon="tabler-chevron-up" color="text-disabled" />
+                  <div class="d-flex align-center">
+                    <span class="choose-import-title text-truncate me-2">Upload CSV File</span>
+                    <VChip
+                      size="x-small"
+                      variant="flat"
+                      color="#F1F1F2"
+                      class="text-caption font-weight-medium"
+                      style="block-size: 20px; color: #444050 !important;"
+                    >
+                      Step 1 of 2
+                    </VChip>
+                  </div>
+                  <VIcon
+                    icon="tabler-chevron-up"
+                    color="text-disabled"
+                  />
                 </div>
                 <CsvUpload v-model="csvFile" />
               </div>
 
               <div v-if="selectedImportMethod === 'lookalike'">
                 <div class="choose-import-method-box d-flex align-center justify-space-between mb-6 pa-4">
-                  <span class="choose-import-title">Lookalike Audience</span>
-                  <VIcon icon="tabler-chevron-up" color="text-disabled" />
+                  <span class="choose-import-title text-truncate">Lookalike Audience</span>
+                  <VIcon
+                    icon="tabler-chevron-up"
+                    color="text-disabled"
+                  />
                 </div>
                 <LookalikeAudience v-model="lookalikeList" />
               </div>
 
               <div v-if="selectedImportMethod === 'webhook'">
-                <WebhookInfo />
+                <!-- Webhook section hidden as requested -->
               </div>
             </div>
 
             <!-- Mapping Selection -->
-            <div v-if="selectedImportMethod === 'csv' && csvFile" class="mb-8">
-               <MappingTable v-model="mappingFields" />
+            <div
+              v-if="selectedImportMethod === 'csv' && csvFile"
+              class="mb-8"
+            >
+              <MappingTable v-model="mappingFields" />
             </div>
           </div>
+        </div>
 
-          <!-- Footer Navigation -->
-          <div class="fixed-footer-button">
-             <VBtn
-               color="primary"
-               height="44"
-               class="px-8 text-none font-weight-bold rounded-lg"
-               variant="flat"
-               :disabled="!isStep1Valid"
-               @click="nextStep"
-             >
-               Next
-             </VBtn>
-          </div>
+        <div class="flex-grow-1" />
+
+        <!-- Lookalike Selection Modal -->
+        <LookalikeModal
+          v-model="showLookalikeModal"
+          @select="(val: any) => lookalikeList = val"
+        />
+
+        <!-- Footer Navigation -->
+        <div class="footer-actions mt-12 pb-8 d-flex justify-end">
+          <VBtn
+            color="primary"
+            height="44"
+            class="px-8 text-none font-weight-bold rounded-lg w-100 w-sm-auto"
+            variant="flat"
+            :disabled="!isStep1Valid"
+            @click="nextStep"
+          >
+            Next
+          </VBtn>
         </div>
       </VCol>
     </VRow>
@@ -273,11 +379,8 @@ const breadcrumbs = [
   line-height: 140%;
 }
 
-.fixed-footer-button {
-  position: fixed;
-  z-index: 99;
-  inset-block-end: 2rem;
-  inset-inline-end: 2.5rem;
+.footer-actions {
+  inline-size: 100%;
 }
 
 .status-dot.completed {
@@ -311,5 +414,5 @@ const breadcrumbs = [
 
 <route lang="yaml">
 meta:
-  navActiveLink: 'index'
+  navActiveLink: index
 </route>

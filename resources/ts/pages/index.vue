@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import advanceWorkflowImg from '@images/png/advance_workflow.png';
-import notFoundImg from '@images/png/not_found.png';
-import standardWorkflowImg from '@images/png/standard_workflow.png';
-import { ref } from 'vue';
+import { ref } from 'vue'
+import advanceWorkflowImg from '@images/png/advance_workflow.png'
+import notFoundImg from '@images/png/not_found.png'
+import standardWorkflowImg from '@images/png/standard_workflow.png'
 
 const selectedFilter = ref('All')
 const searchQuery = ref('')
@@ -32,18 +32,27 @@ const workflowModes = [
 </script>
 
 <template>
-  <div class="h-100 d-flex flex-column" style="padding-block-end: 2rem;">
+  <div
+    class="h-100 d-flex flex-column"
+    style="padding-block-end: 2rem;"
+  >
     <!-- Top Action Bar -->
-    <div class="d-flex align-center mb-10 w-100" style="gap: 1rem;">
-      <div class="d-flex align-center" style=" flex-grow: 1; gap: 1rem; max-inline-size: 400px;">
+    <div
+      class="d-flex flex-column flex-sm-row align-sm-center mb-10 w-100"
+      style="gap: 1rem;"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row align-center w-100"
+        style="flex-grow: 1; gap: 1rem; max-inline-size: 800px;"
+      >
         <VSelect
           v-model="selectedFilter"
           :items="filters"
           density="compact"
           variant="outlined"
           hide-details
-          class="flex-grow-1"
-          style="max-inline-size: 190px;"
+          class="flex-grow-1 w-100 w-sm-auto mb-2 mb-sm-0"
+          style="max-inline-size: 100%; min-inline-size: 190px;"
         />
         <VTextField
           v-model="searchQuery"
@@ -52,12 +61,17 @@ const workflowModes = [
           variant="outlined"
           hide-details
           prepend-inner-icon="tabler-search"
-          class="flex-grow-1"
-          style="max-inline-size: 190px;"
+          class="flex-grow-1 w-100 w-sm-auto"
+          style="max-inline-size: 100%; min-inline-size: 190px;"
         />
       </div>
-      <VSpacer />
-      <VBtn color="primary" class="text-none px-6 rounded" elevation="0" @click="isDialogVisible = true">
+      <VSpacer class="d-none d-sm-block" />
+      <VBtn
+        color="primary"
+        class="text-none px-6 rounded w-100 w-sm-auto mt-4 mt-sm-0"
+        elevation="0"
+        @click="isDialogVisible = true"
+      >
         New Campaign
       </VBtn>
     </div>
@@ -71,8 +85,13 @@ const workflowModes = [
         width="300"
         class="mb-8"
       />
-      
-      <VBtn color="primary" class="text-none px-6 rounded" elevation="0" @click="isDialogVisible = true">
+
+      <VBtn
+        color="primary"
+        class="text-none px-6 rounded"
+        elevation="0"
+        @click="isDialogVisible = true"
+      >
         New Campaign
       </VBtn>
     </div>
@@ -80,7 +99,8 @@ const workflowModes = [
     <!-- Select Workflow Mode Modal -->
     <VDialog
       v-model="isDialogVisible"
-      width="683"
+      width="100%"
+      max-width="683"
     >
       <VCard class="workflow-modal-container">
         <!-- Header -->
@@ -90,13 +110,23 @@ const workflowModes = [
             <span class="modal-subtitle">Choose how you want your campaign to behave</span>
           </div>
           <VSpacer />
-          <div class="close-icon-wrapper d-flex align-center justify-center cursor-pointer" @click="isDialogVisible = false">
-            <VIcon icon="tabler-x" size="14" color="#64748B" />
+          <div
+            class="close-icon-wrapper d-flex align-center justify-center cursor-pointer"
+            @click="isDialogVisible = false"
+          >
+            <VIcon
+              icon="tabler-x"
+              size="14"
+              color="#64748B"
+            />
           </div>
         </VCardTitle>
 
-        <VCardText class="workflow-modal-content px-[48px] py-6">
-          <div class="d-flex flex-column" style="gap: 16px;">
+        <VCardText class="workflow-modal-content px-4 px-sm-[48px] py-6">
+          <div
+            class="d-flex flex-column"
+            style="gap: 16px;"
+          >
             <!-- Advanced Workflow Card -->
             <VCard
               variant="flat"
@@ -104,10 +134,19 @@ const workflowModes = [
               :class="selectedWorkflow === 'advanced' ? 'selected' : 'normal'"
               @click="selectedWorkflow = 'advanced'"
             >
-              <div class="d-flex align-center h-100">
-                <div class="me-4">
-                  <div class="custom-radio-button d-flex align-center justify-center" :class="{ 'active': selectedWorkflow === 'advanced' }">
-                    <div v-if="selectedWorkflow === 'advanced'" class="radio-dot" />
+              <div class="d-flex align-start flex-grow-1">
+                <div
+                  class="me-4"
+                  style="margin-block-start: 2px;"
+                >
+                  <div
+                    class="custom-radio-button d-flex align-center justify-center"
+                    :class="{ active: selectedWorkflow === 'advanced' }"
+                  >
+                    <div
+                      v-if="selectedWorkflow === 'advanced'"
+                      class="radio-dot"
+                    />
                   </div>
                 </div>
                 <div class="flex-grow-1">
@@ -121,24 +160,48 @@ const workflowModes = [
                       Recommended
                     </VChip>
                   </div>
-                  <div class="option-description-text mb-2">Best for high-volume outreach</div>
-                  <div class="d-flex flex-wrap" style="gap: 16px;">
+                  <div class="option-description-text mb-2">
+                    Best for high-volume outreach
+                  </div>
+                  <div
+                    class="d-flex flex-wrap"
+                    style="gap: 16px;"
+                  >
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">Conditional logic</span>
                     </div>
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">Multiple paths</span>
                     </div>
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">More control</span>
                     </div>
                   </div>
                 </div>
-                <VImg :src="advanceWorkflowImg" width="80" class="ms-4 d-none d-sm-block" />
               </div>
+              <VImg
+                :src="advanceWorkflowImg"
+                width="80"
+                height="80"
+                max-width="80"
+                max-height="80"
+                class="ms-4 d-none d-sm-block"
+              />
             </VCard>
 
             <!-- Standard Workflow Card -->
@@ -148,49 +211,85 @@ const workflowModes = [
               :class="selectedWorkflow === 'standard' ? 'selected' : 'normal'"
               @click="selectedWorkflow = 'standard'"
             >
-              <div class="d-flex align-center h-100">
-                <div class="me-4">
-                  <div class="custom-radio-button d-flex align-center justify-center" :class="{ 'active': selectedWorkflow === 'standard' }">
-                    <div v-if="selectedWorkflow === 'standard'" class="radio-dot" />
+              <div class="d-flex align-start flex-grow-1">
+                <div
+                  class="me-4"
+                  style="margin-block-start: 2px;"
+                >
+                  <div
+                    class="custom-radio-button d-flex align-center justify-center"
+                    :class="{ active: selectedWorkflow === 'standard' }"
+                  >
+                    <div
+                      v-if="selectedWorkflow === 'standard'"
+                      class="radio-dot"
+                    />
                   </div>
                 </div>
                 <div class="flex-grow-1">
                   <div class="d-flex align-center mb-1">
                     <span class="option-header-text">Standard Workflow</span>
                   </div>
-                  <div class="option-description-text mb-2">Best for beginners</div>
-                  <div class="d-flex flex-wrap" style="gap: 16px;">
+                  <div class="option-description-text mb-2">
+                    Best for beginners
+                  </div>
+                  <div
+                    class="d-flex flex-wrap"
+                    style="gap: 16px;"
+                  >
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">Linear steps</span>
                     </div>
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">No conditions</span>
                     </div>
                     <div class="d-flex align-center">
-                      <VIcon icon="tabler-circle-filled" size="6" class="me-2 text-disabled opacity-50" />
+                      <VIcon
+                        icon="tabler-circle-filled"
+                        size="6"
+                        class="me-2 text-disabled opacity-50"
+                      />
                       <span class="option-description-text">Easy Setup</span>
                     </div>
                   </div>
                 </div>
-                <VImg :src="standardWorkflowImg" width="80" class="ms-4 d-none d-sm-block" />
               </div>
+              <VImg
+                :src="standardWorkflowImg"
+                width="80"
+                height="80"
+                max-width="80"
+                max-height="80"
+                class="ms-4 d-none d-sm-block"
+              />
             </VCard>
           </div>
         </VCardText>
 
-        <VCardActions class="px-[48px] pb-[32px]" style="gap: 8px;">
+        <VCardActions
+          class="px-4 px-sm-[48px] pb-6 pb-sm-[32px] flex-column-reverse flex-sm-row"
+          style="gap: 12px;"
+        >
           <VSpacer />
           <VBtn
-            class="modal-btn-close text-none"
+            class="modal-btn-close text-none w-100 w-sm-auto"
             variant="flat"
             @click="isDialogVisible = false"
           >
             Close
           </VBtn>
           <VBtn
-            class="modal-btn-next text-none"
+            class="modal-btn-next text-none w-100 w-sm-auto"
             variant="flat"
             @click="() => {
               isDialogVisible = false
@@ -210,7 +309,7 @@ const workflowModes = [
   overflow: hidden;
   border-radius: 6px !important;
   background-color: #fff !important;
-  block-size: 471px;
+  min-block-size: auto;
 }
 
 .workflow-modal-header {
@@ -239,9 +338,13 @@ const workflowModes = [
 }
 
 .workflow-option-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
   border-radius: 8px !important;
-  block-size: 137px;
   inline-size: 100%;
+  max-block-size: 137px;
+  min-block-size: 137px;
   transition: all 0.2s ease;
 
   &.normal {

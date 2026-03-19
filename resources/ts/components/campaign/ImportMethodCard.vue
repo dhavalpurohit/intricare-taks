@@ -52,9 +52,17 @@ const onSelect = () => {
   border: 1px solid #eaefff;
   border-radius: 8px;
   background: #f9fbff;
-  block-size: 148px;
   inline-size: 186px;
+  min-block-size: 148px;
   transition: all 0.2s ease-in-out;
+}
+
+@media (max-width: 600px) {
+  .import-method-card {
+    block-size: auto;
+    inline-size: 100%;
+    min-block-size: 100px;
+  }
 }
 
 .import-method-card:hover {

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
+import downloadIcon from '@images/icons/download.svg?url'
+import uploadIcon from '@images/icons/upload.svg?url'
 
 const props = defineProps<{
   modelValue: File | null
@@ -26,78 +28,107 @@ const onDrop = (e: DragEvent) => {
 </script>
 
 <template>
-  <VCard variant="flat" class="pa-4 border">
-    <VCardTitle class="px-0 pt-0 pb-4">
-      Upload CSV File
-    </VCardTitle>
-    <VCardText class="px-0">
+  <VCard
+    variant="flat"
+    class="pa-0 border-0"
+  >
+    <div class="px-0">
       <div
-        class="csv-upload-area d-flex flex-column align-center justify-center rounded-lg pa-8"
-        :class="{ 'dragging-active': isDragging, 'has-file': !!modelValue }"
+        class="csv-upload-area d-flex flex-column align-center justify-center rounded pa-8 cursor-pointer"
+        :class="{ 'dragging-active': isDragging }"
         @dragover.prevent="isDragging = true"
         @dragleave.prevent="isDragging = false"
         @drop.prevent="onDrop"
       >
-        <VIcon
-          :icon="modelValue ? 'mdi-file-check' : 'mdi-cloud-upload'"
-          size="48"
-          class="mb-4"
-          :color="modelValue ? 'success' : 'primary'"
-        />
-        
-        <template v-if="modelValue">
-          <div class="text-h6 mb-2">{{ modelValue.name }}</div>
-          <div class="text-caption text-medium-emphasis mb-4">
-            {{ (modelValue.size / 1024).toFixed(2) }} KB
-          </div>
-          <VBtn color="error" variant="text" size="small" @click="emit('update:modelValue', null)">
-            Remove File
-          </VBtn>
-        </template>
-        
-        <template v-else>
-          <div class="text-h6 mb-2">Drag & Drop your CSV file here</div>
-          <div class="text-body-2 text-medium-emphasis mb-4">or click to browse</div>
-          
-          <VFileInput
-            label="Choose File"
-            accept=".csv"
-            placeholder="Select your CSV file"
-            prepend-icon=""
-            class="csv-file-input"
-            hide-details
-            @update:model-value="handleFile"
+        <div class="upload-icon-box mb-3 d-flex align-center justify-center">
+          <img
+            :src="uploadIcon"
+            width="14"
+            height="14"
           >
-            <template #label>
-              <VBtn color="primary" block>Select File</VBtn>
-            </template>
-          </VFileInput>
-        </template>
+        </div>
+        
+        <div class="text-center">
+          <div class="drag-text mb-1">
+            Drag a File or click a browse
+          </div>
+          <div class="text-caption text-disabled">
+            File with up to 100 rows works best
+          </div>
+        </div>
+
+        <VFileInput
+          accept=".csv"
+          prepend-icon=""
+          class="csv-file-input"
+          hide-details
+          @update:model-value="handleFile"
+        />
       </div>
       
-      <p class="mt-4 text-caption text-medium-emphasis">
-        <VIcon icon="mdi-information-outline" size="14" class="me-1" />
-        Only .csv files are supported. Max size 10MB.
-      </p>
-    </VCardText>
+      <div class="mt-3 d-flex align-center">
+        <a
+          href="#"
+          class="text-caption text-primary d-flex align-center download-link"
+          style="text-decoration: none;"
+        >
+          <img
+            :src="downloadIcon"
+            width="14"
+            height="14"
+            class="me-2"
+          >
+          Download a sample file
+        </a>
+      </div>
+    </div>
   </VCard>
 </template>
 
 <style scoped>
 .csv-upload-area {
-  border: 2px dashed rgb(var(--v-theme-outline-variant));
-  min-block-size: 200px;
+  position: relative;
+  border: 1px dashed #3666ee;
+  background-color: #f8faff;
+  block-size: 159px;
+  inline-size: 100%;
   transition: all 0.3s ease;
 }
 
 .dragging-active {
-  border-color: rgb(var(--v-theme-primary));
-  background-color: rgba(var(--v-theme-primary), 0.05);
+  background-color: #eaefff;
 }
 
-.has-file {
-  border-style: solid;
-  border-color: rgb(var(--v-theme-success));
+.upload-icon-box {
+  background-color: #eaefff;
+  block-size: 29px;
+  border-radius: 5px;
+  inline-size: 29px;
+}
+
+.drag-text {
+  color: #3666ee;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.download-link {
+  color: #6e6b7b !important;
+}
+
+.download-link:hover {
+  text-decoration: underline !important;
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+.csv-file-input :deep(.v-field) {
+  position: absolute;
+  block-size: 100%;
+  cursor: pointer;
+  inline-size: 100%;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  opacity: 0;
 }
 
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
