@@ -27,3 +27,8 @@ EXPOSE 10000
 
 # Start Laravel
 CMD php -S 0.0.0.0:10000 -t public
+
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+php artisan config:cache
