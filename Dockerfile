@@ -22,14 +22,14 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 RUN npm run build
 
-# ✅ Laravel cache fix (IMPORTANT)
-RUN php artisan config:clear \
- && php artisan cache:clear \
- && php artisan view:clear \
- && php artisan config:cache
+# Fix permissions
+RUN chmod -R 777 storage bootstrap/cache
 
 # Expose port
 EXPOSE 10000
 
-# Start Laravel
-CMD php -S 0.0.0.0:10000 -t public
+# ✅ Run artisan at runtime (NOT build time)
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan config:cache && \
+    php -S 0.0.0.0:10000 -t public
